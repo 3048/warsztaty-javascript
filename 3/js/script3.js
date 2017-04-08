@@ -23,27 +23,38 @@ lastCheckbox.onchange = function () {
 }
 
 
-document.getElementById('wyslij').onclick = "validateForm()";
+document.getElementById('wyslij').onclick = validateForm;
 
 function validateForm(event) {
-
-
-
-
+	
 	var firstAgreement = document.getElementById('zgoda-marketingowa-1');
+	var textInputs = document.querySelectorAll('input[type=text]');
 
 
+
+	for (var i = 0; i < textInputs.length; i++) {
+		if (textInputs[i].value == '') {
+			event.preventDefault();
+			errorMessage(textInputs[i]);
+		} else if (textInputs[i].value != '' && textInputs[i].nextElementSibling.tagName != 'SPAN') {
+			textInputs[i].nextElementSibling.remove();
+		}
+	}
 	if (firstAgreement.checked == false) {
 		event.preventDefault();
-		if (firstAgreement.nextElementSibling.tagName != 'SPAN') {
+		errorMessage(firstAgreement);
+	} else if (firstAgreement.checked == false && firstAgreement.nextElementSibling.tagName != 'SPAN') {
+		firstAgreement.nextElementSibling.remove();
+	}
+}
 
+function errorMessage(element) {
+	if (element.nextElementSibling.tagName != 'SPAN') {
+		var message = document.createElement('span');
+		message.innerText = "To pole jest wymagane";
+		message.style.color = "red"; //to ma byc w stylach
 
-			var message = document.createElement('span');
-			message.innerText = "To pole jest wymagane";
-			message.style.color = "red"; //to ma byc w stylach
-
-			firstAgreement.parentNode.insertBefore(message, firstAgreement.nextSibling);
-		}
+		element.parentNode.insertBefore(message, element.nextSibling);
 
 	}
 }
